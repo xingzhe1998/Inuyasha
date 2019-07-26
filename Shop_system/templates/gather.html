@@ -1,0 +1,148 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+  
+  <head>
+    {% include 'head.html' %}
+  </head>
+  
+  <body>
+    <div class="x-nav">
+      <span class="layui-breadcrumb">
+        <a href="">首页</a>
+        <a href="">演示</a>
+        <a>
+          <cite>导航元素</cite></a>
+      </span>
+      <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
+        <i class="layui-icon" style="line-height:30px">ဂ</i></a>
+    </div>
+    <div class="x-body">
+      <div class="layui-row">
+        <form class="layui-form layui-col-md12 x-so">
+          <input class="layui-input" placeholder="开始日" name="start" id="start" value="{{ query_dict.start }}">
+          <input class="layui-input" placeholder="截止日" name="end" id="end" value="{{ query_dict.end }}">
+          <button class="layui-btn"  lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
+        </form>
+      </div>
+      <fieldset class="layui-elem-field">
+        <legend>{{ query_dict.start }}~{{ query_dict.end }}收租统计</legend>
+        <div class="layui-field-box">
+            <div class="layui-col-md12">
+                <div class="layui-card">
+                    <div class="layui-card-body">
+                        <div class="layui-carousel x-admin-carousel x-admin-backlog" lay-anim="" lay-indicator="inside" lay-arrow="none" style="width: 100%; height: 90px;">
+                            <div carousel-item="">
+                                <ul class="layui-row layui-col-space10 layui-this">
+                                    <li class="layui-col-xs4">
+                                        <a href="javascript:;" class="x-admin-backlog-body">
+                                            <h3>应收金额</h3>
+                                            <p>
+                                            <cite>{{ sum_should_amount }}</cite></p>
+                                        </a>
+                                    </li>
+                                    <li class="layui-col-xs4">
+                                        <a href="javascript:;" class="x-admin-backlog-body">
+                                            <h3>实收金额</h3>
+                                            <p>
+                                                <cite>{{ sum_pay_amount }}</cite></p>
+                                        </a>
+                                    </li>
+                                    <li class="layui-col-xs4">
+                                        <a href="javascript:;" class="x-admin-backlog-body">
+                                            <h3>待收金额</h3>
+                                            <p>
+                                                <cite>{{ sum_arrears }}</cite></p>
+                                        </a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+      </fieldset>
+      <table class="layui-table">
+        <thead>
+          <tr>
+            <th>
+              <div class="layui-unselect header layui-form-checkbox" lay-skin="primary"><i class="layui-icon">&#xe605;</i></div>
+            </th>
+            <th>店铺地址</th>
+            <th>店铺名称</th>
+            <th>经营人</th>
+            <th>合同状态</th>
+            <th>交租周期</th>
+            <th>欠费</th>
+            <th>交租日期</th>
+            </tr>
+        </thead>
+          {% for item in current_paginator.object_list %}
+        <tbody>
+          <tr>
+            <td>
+              <div class="layui-unselect layui-form-checkbox" lay-skin="primary" data-id='2'><i class="layui-icon">&#xe605;</i></div>
+            </td>
+            <td>{% for shop in item.contract.shop.all %}{{ shop.shop_address }}{% endfor %}</td>
+            <td>{{ item.contract.shop_name }}</td>
+            <td>{% for operator in item.contract.operator.all %}{{ operator.operator_name }}{% endfor %}</td>
+            <td>{{ item.contract_status }}</td>
+            <td>{{ item.start_date }}-{{ item.end_date }}</td>
+            <td><font color="red"><b>{{ item.arrears }}</b></font></td>
+            <td>{{ item.pay_date }}</td>
+          </tr>
+        </tbody>
+          {% endfor %}
+      </table>
+      <div class="page">
+        <div>
+            {% if current_paginator.has_previous %}
+                <a class="prev" href="?page={{ current_paginator.previous_page_number }}">&lt;&lt;</a>
+            {% endif %}
+            {% for page in page_range %}
+                {% if current_paginator.number == page %}
+                    <span class="current" href="?page={{ page }}">{{ page }}</span>
+                {% else %}
+                    <a class="num" href="javascript:get_querys({{ page }})" onclick="get_querys({{ page }})">{{ page }}</a>
+                {% endif %}
+            {% endfor %}
+            {% if current_paginator.has_next %}
+                <a class="next" href="?page={{ current_paginator.next_page_number }}">&gt;&gt;</a>
+            {% endif %}
+        </div>
+      </div>
+
+    </div>
+    <script>
+      layui.use('laydate', function(){
+        var laydate = layui.laydate;
+        
+        //执行一个laydate实例
+        laydate.render({
+          elem: '#start' //指定元素
+        });
+
+        //执行一个laydate实例
+        laydate.render({
+          elem: '#end' //指定元素
+        });
+      });
+      function get_querys(page) {
+          result = "";
+          params = $("form").serialize()+"&page="+page;
+          $.ajax({
+            url: "{% url 'rental:rental_gather' %}",
+            data: params,
+            async: false,
+            success: function (data) {
+                result = data;
+                return data
+            }
+          });
+          return result
+      }
+    </script>
+  </body>
+
+</html>

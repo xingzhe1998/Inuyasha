@@ -1,0 +1,93 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+  
+  <head>
+    {% include 'head.html' %}
+  </head>
+  
+  <body>
+    <div class="x-body">
+        <form class="layui-form" method="post" action="#">
+            {% csrf_token %}
+          <div class="layui-form-item">
+              <label for="L_email" class="layui-form-label">
+                  <span class="x-red">*</span>经营人姓名
+              </label>
+              <div class="layui-input-inline">
+                  <input type="text" id="L_shop_address" disabled="disabled" name="operator_name" class="layui-input" value="{{ operator.operator_name }}">
+              </div>
+          </div>
+          <div class="layui-form-item">
+              <label for="L_email" class="layui-form-label">
+                  <span class="x-red">*</span>联系方式
+              </label>
+              <div class="layui-input-inline">
+                  <input type="text" id="L_shop_address"  name="operator_tel" class="layui-input" value="{{ operator.operator_tel }}">
+              </div>
+          </div>
+          <div class="layui-form-item">
+              <label for="L_email" class="layui-form-label">
+                  <span class="x-red">*</span>身份证号
+              </label>
+              <div class="layui-input-inline">
+                  <input type="text" id="L_shop_address" name="operator_idcard" class="layui-input" value="{{ operator.operator_idcard }}">
+              </div>
+          </div>
+          <div class="layui-form-item">
+              <label for="L_repass" class="layui-form-label">
+              </label>
+              <button type="submit" class="layui-btn" lay-filter="add" lay-submit="">
+                  保存
+              </button>
+          </div>
+      </form>
+    </div>
+    <script>
+
+      layui.use(['form','layer'], function(){
+          $ = layui.jquery;
+          var form = layui.form
+             ,layer = layui.layer;
+          //监听提交
+        form.on('submit(add)', function(data){
+              //发异步，把数据提交给后端
+            console.log(data);
+             $.ajax({
+                url : "{% url 'operator:operator_edit' operator.operator_id %}",
+                type: 'POST',
+                dataType: 'json',
+                async: false,
+                data: data.field,
+           beforeSend: function (xhr) {
+                    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+                },
+                success: function (data) {
+                    if (data.code = 200) {
+                        console.log("success");
+                        layer.alert(data.msg, {icon: 6}, function () {
+                            // 获得frame索引
+                            var index = parent.layer.getFrameIndex(window.name);
+                            //关闭当前frame
+                            parent.layer.close(index);
+                        });
+                    }
+                },
+                error: function (data) {
+                    if (data.code = 400) {
+                        console.log("failed");
+                        layer.alert(data.msg, {icon: 6}, function () {
+                            // 获得frame索引
+                            var index = parent.layer.getFrameIndex(window.name);
+                        });
+                    }
+                 }
+             });
+             return false;
+        });
+      });
+  </script>
+
+  </body>
+
+</html>

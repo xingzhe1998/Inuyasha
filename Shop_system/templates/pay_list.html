@@ -1,0 +1,137 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+  
+  <head>
+    {% include 'head.html' %}
+  </head>
+  
+  <body>
+    <div class="x-nav">
+      <span class="layui-breadcrumb">
+        <a href="">首页</a>
+        <a href="">演示</a>
+        <a>
+          <cite>导航元素</cite></a>
+      </span>
+      <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
+        <i class="layui-icon" style="line-height:30px">ဂ</i></a>
+    </div>
+    <div class="x-body">
+      <div class="layui-row">
+        <form class="layui-form layui-col-md12 x-so">
+          <input class="layui-input" placeholder="交租日期-开始" name="start" id="start" value="{{ query_dict.start }}">
+          <input class="layui-input" placeholder="交租日期-截止" name="end" id="end" value="{{ query_dict.end }}">
+          <input id="keywords" type="text" name="search"  placeholder="店铺名/地址/经营人" autocomplete="off" class="layui-input" value="{{ query_dict.search }}">
+          <div class="layui-input-inline">
+            <select id="contract_status" name="contract_status" lay-search="" lay-verify="required">
+              {% for item in contract_status_dict.items %}
+              <option value="{{ item.0 }}">{{ item.1 }}</option>
+              {% endfor %}
+            </select>
+          </div>
+
+          <button class="layui-btn"  lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
+        </form>
+      </div>
+      <xblock>
+        <button class="layui-btn" onclick="x_admin_show('交租','{% url 'rental:rental_add' %}')"><i class="layui-icon"></i>交租</button>
+        <span class="x-right" style="line-height:40px">共有数据：{{ current_paginator.paginator.count }} 条</span>
+      </xblock>
+      <table class="layui-table">
+        <thead>
+          <tr>
+            <th>
+              <div class="layui-unselect header layui-form-checkbox" lay-skin="primary"><i class="layui-icon">&#xe605;</i></div>
+            </th>
+            <th>店铺地址</th>
+            <th>店铺名称</th>
+            <th>经营人</th>
+            <th>合同状态</th>
+            <th>交租周期</th>
+            <th>已缴</th>
+            <th>欠费</th>
+            <th>交租日期</th>
+            <th >操作</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for item in current_paginator.object_list  %}
+          <tr>
+{#              {{ item.contract_status }}#}
+            <td>
+              <div class="layui-unselect layui-form-checkbox" lay-skin="primary" data-id='2'><i class="layui-icon">&#xe605;</i></div>
+            </td>
+            <td>{% for shop in item.contract.shop.all %}{{ shop.shop_address }}<br/>{% endfor %}</td>
+            <td>{{ item.contract.shop_name }}</td>
+            <td>{% for operator in item.contract.operator.all %}{{ operator.operator_name }}{% endfor %}</td>
+            <td>{{ item.contract_status }}</td>
+            <td>{{ item.start_date|date:"Y/n/j" }}~{{ item.end_date|date:"Y/n/j" }}</td>
+            <td>{{ item.pay_amount }}</td>
+            <td><font color="red"><b>{{ item.arrears }}</b></font></td>
+            <td>{{ item.pay_date|date:"Y/n/j" }}</td>
+            <td class="td-manage">
+              <a title="查看"  onclick="x_admin_show('编辑','{% url 'rental:rental_edit' item.rental_id %}')" href="javascript:;">
+                <i class="layui-icon">&#xe63c;</i>
+              </a>
+            </td>
+          </tr>
+        {% endfor %}
+        </tbody>
+      </table>
+      <div class="page">
+          {% if current_paginator.has_previous %}
+              <a class="prev"  href="?page={{ current_paginator.previous_page_number }}">&lt;&lt;</a>
+          {% endif %}
+          {% for page in page_range %}
+              {% if current_paginator.number == page %}
+                  <span class="current" href="?page={{ page }}">{{ page }}</span>
+              {% else %}
+                  <a class="num" href="javascript:get_querys({{ page }})" onclick="get_querys({{ page }})">{{ page }}</a>
+              {% endif %}
+          {% endfor %}
+          {% if current_paginator.has_next %}
+              <a class="next" href="?page={{ current_paginator.next_page_number }}">&gt;&gt;</a>
+          {% endif %}
+      </div>
+    </div>
+    <script>
+      layui.use('laydate', function(){
+        var laydate = layui.laydate;
+        
+        //执行一个laydate实例
+        laydate.render({
+          elem: '#start' //指定元素
+        });
+
+        //执行一个laydate实例
+        laydate.render({
+          elem: '#end' //指定元素
+        });
+      });
+
+      function get_querys(page) {
+          result = "";
+{#          console.log();#}
+{#          params = {};#}
+{#          params["start"] = $("#start").val();#}
+{#          params["end"] = $("#end").val();#}
+{#          params["keywords"] = $("#keywords").val();#}
+{#          params["keywords"] = $("#keywords").val();#}
+          params = $("form").serialize()+"&page="+page;
+          $.ajax({
+            url: "{% url 'rental:rental_list' %}",
+            data: params,
+            async: false,
+            success: function (data) {
+                result = data;
+                return data
+            }
+          });
+          return result
+      }
+    </script>
+
+  </body>
+
+</html>

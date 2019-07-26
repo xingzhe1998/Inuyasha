@@ -1,0 +1,143 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+  
+  <head>
+    {% include 'head.html' %}
+  </head>
+  
+  <body>
+    <div class="x-nav">
+      <span class="layui-breadcrumb">
+        <a href="">首页</a>
+        <a href="">演示</a>
+        <a>
+          <cite>导航元素</cite></a>
+      </span>
+      <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
+        <i class="layui-icon" style="line-height:30px">ဂ</i></a>
+    </div>
+    <div class="x-body">
+      <div class="layui-row">
+        <form class="layui-form layui-col-md12 x-so">
+          <input type="text" name="search"  placeholder="输入门面地址或名称" autocomplete="off" class="layui-input">
+          <button class="layui-btn"  lay-submit="" lay-filter="sreach"><i class="layui-icon">&#xe615;</i></button>
+        </form>
+      </div>
+      <xblock>
+        <button class="layui-btn" onclick="x_admin_show('添加商铺','{% url 'shop:shop_add' %}')"><i class="layui-icon"></i>添加商铺</button>
+        <button class="layui-btn" onclick="x_admin_show('导入商铺','shop_import.html')"><i class="layui-icon"></i>批量导入</button>
+        <span class="x-right" style="line-height:40px">共有数据：{{ current_paginator.paginator.count }} 条</span>
+      </xblock>
+      <table class="layui-table layui-form">
+        <thead>
+          <tr>
+            <th>
+              <div class="layui-unselect header layui-form-checkbox" lay-skin="primary"><i class="layui-icon">&#xe605;</i></div>
+            </th>
+            <th>商铺地址</th>
+            <th>商铺类型</th>
+            <th>商铺名</th>
+            <th>经营人</th>
+            <th>商铺出租状态</th>
+            <th >操作</th>
+            </tr>
+        </thead>
+        {% for item in current_paginator.object_list %}
+        <tbody>
+          <tr>
+            <td>
+              <div class="layui-unselect layui-form-checkbox" lay-skin="primary" data-id='2'><i class="layui-icon">&#xe605;</i></div>
+            </td>
+            <td>{{ item.shop_address }}</td>
+            <td>{{ item.shop_type }}</td>
+            <td>{{ item.contract.shop_name }}</td>
+            <td>{% for operator in item.contract.operator.all %}{{ operator.operator_name }}{% endfor %}</td>
+            <td><span class="layui-btn layui-btn-normal layui-btn-mini">{{ item.contract_status }}</span></td>
+            <td class="td-manage">
+{#              <input type="checkbox" name="switch"  lay-text="开启|停用"  checked="" lay-skin="switch">#}
+{#                <a title="修改商铺"  onclick="x_admin_show('修改商铺','/shop/edit{{ item.shop_id }}')" href="javascript:;">#}
+{#                    <i class="layui-icon">&#xe63c;</i>#}
+{#                </a>#}
+                <a title="修改商铺"  onclick="x_admin_show('修改商铺','{% url 'shop:shop_edit' item.shop_id %}')" href="javascript:;">
+                    <i class="layui-icon">&#xe63c;</i>
+                </a>
+                <a title="出租商铺"  onclick="create_contract({% if item.contract %}0{% else %}1{% endif %})" href="javascript:;">
+                    <i class="layui-icon">&#xe63c;</i>
+                </a>
+                <a title="查看合同"  onclick="show_contract({% if item.contract %}{{ item.contract.contract_id }}{% else %}0{% endif %})" href="javascript:;">
+                    <i class="layui-icon">&#xe63c;</i>
+                </a>
+            </td>
+          </tr>
+        </tbody>
+          {% endfor %}
+      </table>
+      <div class="page">
+        <div>
+            {% if current_paginator.has_previous %}
+                <a class="prev" href="?page={{ current_paginator.previous_page_number }}">&lt;&lt;</a>
+            {% endif %}
+            {% for page in page_range %}
+                {% if current_paginator.number == page %}
+                    <span class="current" href="?page={{ page }}">{{ page }}</span>
+                {% else %}
+                    <a class="num" href="javascript:get_querys({{ page }})" onclick="get_querys({{ page }})">{{ page }}</a>
+                {% endif %}
+            {% endfor %}
+            {% if current_paginator.has_next %}
+                <a class="next" href="?page={{ current_paginator.next_page_number }}">&gt;&gt;</a>
+            {% endif %}
+        </div>
+      </div>
+
+    </div>
+    <script>
+        function get_querys(page) {
+          result = "";
+          params = $("form").serialize()+"&page="+page;
+          $.ajax({
+            url: "{% url 'shop:shop_list' %}", //显示编辑页面即可
+            data: params,
+            async: false,
+            success: function (data) {
+                result = data;
+                return data
+            }
+          });
+          return result
+        }
+        function  show_contract(id) {
+            if(id){
+                x_admin_show('查看合同','/contract/edit'+id+'/')
+            }
+            else{
+                layer.msg('门面未出租，无合同查看', {icon: 1});
+            }
+        }
+
+        function create_contract(id) {
+            if(id){
+                x_admin_show('创建合同','{% url "contract:contract_add" %}')
+            }
+            else{
+                layer.msg('门面出租中，不能创建合同', {icon: 1});
+            }
+        }
+        //监听提交
+        form.on('submit(add)', function(data){
+            console.log(data);
+            //发异步，把数据提交给php
+            $.ajax({
+                url:'{% url 'shop:shop_list' %}',
+                dataType:'text',
+                data:data.field,
+                beforeSend: function (xhr) {
+                    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+                }
+            });
+            return false;
+        });
+    </script>
+  </body>
+</html>

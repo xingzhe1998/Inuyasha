@@ -1,0 +1,119 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+  
+  <head>
+    {% include 'head.html' %}
+  </head>
+  
+  <body>
+    <div class="x-body">
+        <form class="layui-form">
+          <div class="layui-form-item">
+              <label for="L_email" class="layui-form-label">
+                  商铺地址
+              </label>
+              <div class="layui-input-inline">
+                  <input type="text" id="L_shop_address" name="shop_address" disabled="" value="{{ shop.shop_address }}" class="layui-input">
+              </div>
+              <div class="layui-form-mid layui-word-aux">
+                  <span class="x-red">*</span>
+              </div>
+          </div>
+          <div class="layui-form-item">
+              <label for="L_username" class="layui-form-label">
+                  <span class="x-red">*</span>商铺类型
+              </label>
+              <div class="layui-input-inline">
+                  <input type="text" id="L_shop_type" name="shop_type" required="" value="{{ shop.shop_type }}" lay-verify="shop_type"
+                  autocomplete="off" class="layui-input">
+              </div>
+          </div>
+          <div class="layui-form-item">
+              <label for="L_email" class="layui-form-label">
+                  当前商铺名
+              </label>
+              <div class="layui-input-inline">
+                  <input type="text" id="L_shop_address" name="shop_name" disabled="" value="{{ shop.shop_name }}" class="layui-input">
+              </div>
+          </div>
+          <div class="layui-form-item">
+              <label for="L_email" class="layui-form-label">
+                  当前经营人
+              </label>
+              <div class="layui-input-inline">
+                  <input type="text" id="L_shop_address" name="operator_name" disabled="" value="{% for operator in shop.operators %}{{ operator.operator_name }}{% endfor %}" class="layui-input">
+              </div>
+          </div>
+          <div class="layui-form-item layui-form">
+              <label for="L_username" class="layui-form-label">
+                  <span class="x-red">*</span>商铺状态
+              </label>
+              <div class="layui-input-inline">
+                  <input type="checkbox" name="switch"  lay-text="开启|停用"  checked="" lay-skin="switch">
+              </div>
+              <div class="layui-form-mid layui-word-aux">
+                  <span class="x-red">*</span>商铺是否存在
+              </div>
+          </div>
+
+
+          <div class="layui-form-item">
+              <label for="L_repass" class="layui-form-label">
+              </label>
+              <button  class="layui-btn" lay-filter="add" lay-submit="">
+                  保存
+              </button>
+          </div>
+      </form>
+    </div>
+    <script>
+      layui.use(['form','layer'], function(){
+          $ = layui.jquery;
+        var form = layui.form
+        ,layer = layui.layer;
+
+
+
+        //监听提交
+        form.on('submit(add)', function(data){
+              //发异步，把数据提交给后端
+            console.log(data);
+             $.ajax({
+                url : "{% url 'shop:shop_edit' shop.shop_id %}",
+                type: 'POST',
+                dataType: 'json',
+                async: false,
+                data: data.field,
+           beforeSend: function (xhr) {
+                    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+                },
+                success: function (data) {
+                    if (data.code = 200) {
+                        console.log("success");
+                        layer.alert(data.msg, {icon: 6}, function () {
+                            // 获得frame索引
+                            var index = parent.layer.getFrameIndex(window.name);
+                            //关闭当前frame
+                            parent.layer.close(index);
+                        });
+                    }
+                },
+                error: function (data) {
+                    if (data.code = 400) {
+                        console.log("failed");
+                        layer.alert(data.msg, {icon: 6}, function () {
+                            // 获得frame索引
+                            var index = parent.layer.getFrameIndex(window.name);
+                        });
+                    }
+                 }
+             });
+             return false;
+        });
+      });
+  </script>
+
+  </body>
+
+</html>

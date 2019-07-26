@@ -1,0 +1,29 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+  
+  <head>
+    {% include 'head.html' %}
+  </head>
+  
+  <body>
+    <div class="x-body">
+          <div class="layui-form-item">
+              <label for="L_username" class="layui-form-label">
+                  用户名
+              </label>
+              <div class="layui-input-inline">
+                  <input type="text" id="L_username" name="username" disabled="" value="{{ user.username }}" class="layui-input">
+              </div>
+          </div>
+          <div class="layui-form-item">
+              <label for="L_pass" class="layui-form-label">
+                  加入时间
+              </label>
+              <div class="layui-input-inline">
+                  <input type="text" id="L_jointime" name="jointime" value="{{ user.date_joined }}"  disabled="" class="layui-input">
+              </div>
+          </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,119 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+  <head>
+     {% include 'head.html' %}
+  </head>
+  
+  <body>
+    <div class="x-body">
+        <form class="layui-form">
+            {% csrf_token %}
+          <div class="layui-form-item">
+              <label for="L_email" class="layui-form-label">
+                  <span class="x-red">*</span>商铺名
+              </label>
+              <div class="layui-input-inline" id="select_contract_parent">
+                <select lay-filter="select_contract" id="select_contract" name="select_contract" lay-search lay-verify="required">
+{#                    {% for contract in contracts %}#}
+{#                        <option>{{ contract.shop_name }}</option>#}
+{#                    {% endfor %}#}
+                </select>
+              </div>
+              <div class="layui-form-mid layui-word-aux" id="contract_arrears">
+              </div>
+          </div>
+          <div class="layui-form-item">
+              <label for="L_email" class="layui-form-label">
+                  <span class="x-red">*</span>交费金额(元)
+              </label>
+              <div class="layui-input-inline">
+                  <input type="text" id="L_pay_amount" name="pay_amount" class="layui-input" lay-verify="required">
+              </div>
+          </div>
+          <div class="layui-form-item">
+              <label for="L_username" class="layui-form-label">
+                  <span class="x-red">*</span>交费日期
+              </label>
+              <div class="layui-input-inline">
+                  <input class="layui-input" placeholder="交费日期" name="pay_date" id="pay_date" lay-verify="required">
+              </div>
+          </div>
+          <div class="layui-form-item">
+              <label for="L_repass" class="layui-form-label">
+              </label>
+              <button  class="layui-btn" lay-filter="add" lay-submit="">
+                  保存
+              </button>
+          </div>
+        </form>
+    </div>
+     <script>
+      layui.use('laydate', function(){
+        var laydate = layui.laydate;
+        //执行一个laydate实例
+        laydate.render({
+          elem: '#pay_date' //指定元素
+        });
+      });
+      layui.use(['form','layer'], function(){
+          $ = layui.jquery;
+          var form = layui.form
+             ,layer = layui.layer;
+          //监听提交
+        form.on('submit(add)', function(data){
+              //发异步，把数据提交给后端
+             $.ajax({
+                  url: '{% url 'rental:rental_add' %}',
+                 type: 'POST',
+             dataType: 'json',
+                async: false,
+                 data: data.field,
+           beforeSend: function (xhr) {
+                    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+                },
+                success: function (data) {
+                      console.log("success");
+                      layer.alert("保存成功", {icon: 6},function () {
+                          // 获得frame索引
+                          var index = parent.layer.getFrameIndex(window.name);
+                          //关闭当前frame
+                          parent.layer.close(index);
+                      });
+                }
+             });
+             // return false用于阻止表单提交。因为已经ajax提交过了
+             return false;
+
+          });
+        function load_options(){
+            // 动态加载select的option
+            // 获取合同数据，返回字典
+            options_str = "<option value=''>选择或输入合同</option>";
+            $.get("{% url 'apis:contract_load' %}", function(data){
+                for(var i=0; i<data.length; i++){
+                    options_str += "<option value='"+data[i].contract_id+"'>"+data[i].shop_name+"</option>"
+                }
+                $("#select_contract").html(options_str);
+                form.render('select');
+            });
+        }
+        load_options();
+        // 当修改select选项时触发： 事件(过滤名)
+        form.on('select(select_contract)', function(data){
+           url = "{% url 'apis:contract_arrears' '0000' %}";
+           url = url.replace("0000", data.value);
+           $.get(url, function (result) {
+               if(result == 0){
+                   html = "该客户缴租金很及时，无拖欠租金"
+               }else{
+                   html = "该客户当前累计未缴租金<font color='red'><b>"+result.total+"</b></font>元。";
+               }
+               $("#contract_arrears").html(html);
+           })
+        });
+      });
+
+  </script>
+  </body>
+</html>

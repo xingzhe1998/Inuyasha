@@ -1,0 +1,133 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>欢迎页面-X-admin2.0</title>
+        <meta name="renderer" content="webkit">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="viewport" content="width=device-width,user-scalable=yes, minimum-scale=0.4, initial-scale=0.8,target-densitydpi=low-dpi" />
+        <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+        <link rel="stylesheet" href="{% static 'css/font.css'%}">
+        <link rel="stylesheet" href="{% static 'css/xadmin.css'%}">
+    </head>
+    <body>
+    <div class="x-body layui-anim layui-anim-up">
+        <blockquote class="layui-elem-quote">欢迎管理员：
+            <span class="x-red">{{ user }}</span>！当前时间:<span id="time"></span></blockquote>
+          <fieldset class="layui-elem-field">
+            <legend>本月收租统计</legend>
+            <div class="layui-field-box">
+                <div class="layui-col-md12">
+                    <div class="layui-card">
+                        <div class="layui-card-body">
+                            <div class="layui-carousel x-admin-carousel x-admin-backlog" lay-anim="" lay-indicator="inside" lay-arrow="none" style="width: 100%; height: 90px;">
+                                <div carousel-item="">
+                                    <ul class="layui-row layui-col-space10 layui-this">
+                                        <li class="layui-col-xs4">
+                                            <a href="javascript:;" class="x-admin-backlog-body">
+                                                <h3>待收金额</h3>
+                                                <p>
+                                                <cite>{{ sum_arrears }}</cite></p>
+                                            </a>
+                                        </li>
+                                        <li class="layui-col-xs4">
+                                            <a href="javascript:;" class="x-admin-backlog-body">
+                                                <h3>近30天实收金额</h3>
+                                                <p>
+                                                    <cite>{{ sum_pay_amount }}</cite></p>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          </fieldset>
+          <fieldset class="layui-elem-field">
+            <legend>收租提醒</legend>
+            <div class="layui-field-box">
+              <table class="layui-table">
+                <thead>
+                  <tr>
+                    <th>店铺地址</th>
+                    <th>店铺名称</th>
+                    <th>经营人</th>
+                    <th>联系方式</th>
+                    <th>合同状态</th>
+                    <th>本期周期</th>
+                    <th>本期金额</th>
+                    <th>本期已交</th>
+                    <th>累计欠款</th>
+                    </tr>
+                </thead>
+                <tbody>
+                {% for item in current_paginator.object_list %}
+                    <tr>
+                    <td>{% for shop in item.contract.shop.all %}{{ shop.shop_address }}{% endfor %}</td>
+                    <td>{{ item.contract.shop_name }}</td>
+                    <td>{% for operator in item.contract.operator.all %}{{ operator.operator_name }}/{% endfor %}</td>
+                    <td>{% for operator in item.contract.operator.all %}{{ operator.operator_tel }}/{% endfor %}</td>
+                    <td>{{ item.contract_status }}</td>
+                    <td>{{ item.start_date|date:"Y/m/d" }}~{{ item.end_date|date:"Y/m/d" }}</td>
+                    <td>{{ item.should_amount }}</td>
+                    <td>{{ item.pay_amount }}</td>
+                    <td><font color="red"><b>{{ item.arrears }}</b></font></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </fieldset>
+        <div class="page">
+            <div>
+                {% if current_paginator.has_previous %}
+                    <a class="prev" href="?page={{ current_paginator.previous_page_number }}">&lt;&lt;</a>
+                {% endif %}
+                {% for page in page_range %}
+                    {% if current_paginator.number == page %}
+                        <span class="current" href="?page={{ page }}">{{ page }}</span>
+                    {% else %}
+                        <a class="num" href="javascript:get_querys({{ page }})" onclick="get_querys({{ page }})">{{ page }}</a>
+                    {% endif %}
+                {% endfor %}
+                {% if current_paginator.has_next %}
+                    <a class="next" href="?page={{ current_paginator.next_page_number }}">&gt;&gt;</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <script>
+
+        function get_querys(page) {
+          result = "";
+          params = $("form").serialize()+"&page="+page;
+          $.ajax({
+            url: "{% url 'welcome:welcome' %}", //显示编辑页面即可
+            data: params,
+            async: false,
+            success: function (data) {
+                result = data;
+                return data
+            }
+          });
+          return result
+        }
+        function time(){
+            var date =  new Date();
+            year = date.getFullYear();
+            month = date.getMonth() + 1;
+            day = date.getDate();
+            hours = date.getHours();
+            minutes = date.getMinutes();
+            seconds = date.getSeconds();
+            document.getElementById("time").innerHTML = year + "年" + month + "月" + day + "日" + "\t" + hours + ":" + minutes +":" + seconds;
+        }
+        time();
+        setInterval("time()",1000);
+
+    </script>
+    </body>
+</html>

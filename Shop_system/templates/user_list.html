@@ -1,0 +1,77 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+  <head>
+    {% include 'head.html' %}
+  </head>
+  
+  <body class="layui-anim layui-anim-up">
+    <div class="x-nav">
+      <span class="layui-breadcrumb">
+        <a href="">首页</a>
+        <a href="">演示</a>
+        <a>
+          <cite>导航元素</cite></a>
+      </span>
+      <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
+        <i class="layui-icon" style="line-height:30px">ဂ</i></a>
+    </div>
+    <div class="x-body">
+      <div class="layui-row">
+      </div>
+      <xblock>
+        {% if request.user.is_superuser %}
+        <button class="layui-btn" onclick="x_admin_show('添加用户','{% url 'account:user_add' %}',600,400)"><i class="layui-icon"></i>添加</button>
+        {% endif %}
+        <span class="x-right" style="line-height:40px">共有数据：{{ user_list|length }} 条</span>
+      </xblock>
+      <table class="layui-table">
+        <thead>
+          <tr>
+            <th>
+              <div class="layui-unselect header layui-form-checkbox" lay-skin="primary"><i class="layui-icon">&#xe605;</i></div>
+            </th>
+            <th>ID</th>
+            <th>用户名</th>
+            <th>加入时间</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% for user in user_list %}
+          <tr>
+            <td>
+              <div class="layui-unselect layui-form-checkbox" lay-skin="primary" data-id='2'><i class="layui-icon">&#xe605;</i></div>
+            </td>
+            <td>{{ user.id }}</td>
+            <td>{{ user.username }}</td>
+            <td>{{ user.date_joined }}</td>
+            <td class="td-manage">
+              <a onclick="x_admin_show('修改密码','{% url 'account:reset_passwd' user.id %}',600,400)" title="修改密码" href="javascript:;">
+                <i class="layui-icon">&#xe631;</i>
+              </a>
+            </td>
+          </tr>
+        {% endfor %}
+
+        </tbody>
+      </table>
+
+    </div>
+    <script>
+      layui.use('laydate', function(){
+        var laydate = layui.laydate;
+        
+        //执行一个laydate实例
+        laydate.render({
+          elem: '#start' //指定元素
+        });
+
+        //执行一个laydate实例
+        laydate.render({
+          elem: '#end' //指定元素
+        });
+      });
+    </script>
+  </body>
+</html>

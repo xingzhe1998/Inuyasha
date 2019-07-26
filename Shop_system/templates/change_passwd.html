@@ -1,0 +1,115 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+  
+  <head>
+    {% include 'head.html' %}
+  </head>
+  
+  <body>
+    <div class="x-body">
+        <form class="layui-form">
+          <div class="layui-form-item">
+              <label for="L_username" class="layui-form-label">
+                  昵称
+              </label>
+              <div class="layui-input-inline">
+                  {% if request.user.password == user.password %}xx{% endif %}
+                  <input type="text" id="L_username" name="username" disabled="" value="{{ user.username }}" class="layui-input">
+              </div>
+          </div>
+          <div class="layui-form-item">
+              <label for="L_username" class="layui-form-label">
+                  上次登录时间
+              </label>
+              <div class="layui-input-inline">
+                  <input type="text" id="L_username" name="last_login" disabled="" value="{{ user.last_login }}" class="layui-input">
+              </div>
+          </div>
+          <div class="layui-form-item">
+              <label for="L_repass" class="layui-form-label">
+                  <span class="x-red">*</span>旧密码
+              </label>
+              <div class="layui-input-inline">
+                <input type="password" id="L_repass" name="oldpasswd" required="" lay-verify="required"
+                       autocomplete="off" class="layui-input">
+              </div>
+          </div>
+          <div class="layui-form-item">
+              <label for="L_pass" class="layui-form-label">
+                  <span class="x-red">*</span>新密码
+              </label>
+              <div class="layui-input-inline">
+                  <input type="password" id="L_pass" name="newpasswd" required="" lay-verify="required"
+                  autocomplete="off" class="layui-input">
+              </div>
+              <div class="layui-form-mid layui-word-aux">
+                  6到16个字符
+              </div>
+          </div>
+          <div class="layui-form-item">
+              <label for="L_repass" class="layui-form-label">
+                  <span class="x-red">*</span>确认密码
+              </label>
+              <div class="layui-input-inline">
+                  <input type="password" id="L_repass" name="repasswd" required="" lay-verify="required"
+                  autocomplete="off" class="layui-input">
+              </div>
+          </div>
+          <div class="layui-form-item">
+              <label for="L_repass" class="layui-form-label">
+              </label>
+              <button  class="layui-btn" lay-filter="save" lay-submit="">
+                  保存
+              </button>
+          </div>
+      </form>
+    </div>
+    <script>
+            layui.use(['form','layer'], function(){
+                $ = layui.jquery;
+              var form = layui.form
+              ,layer = layui.layer;
+            
+              //监听提交
+        form.on('submit(save)', function(data){
+              //发异步，把数据提交给后端
+            console.log(data);
+             $.ajax({
+                url : "{% url 'account:change_passwd' %}",
+                type: 'POST',
+                dataType: 'json',
+                async: false,
+                data: data.field,
+           beforeSend: function (xhr) {
+                    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+                },
+                success: function (data) {
+                    if (data.code = 200) {
+                        console.log("success");
+                        layer.alert(data.msg, {icon: 6}, function () {
+                            // 获得frame索引
+                            var index = parent.layer.getFrameIndex(window.name);
+                            //关闭当前frame
+                            parent.layer.close(index);
+                        });
+                    }
+                },
+                error: function (data) {
+                    if (data.code = 400) {
+                        console.log("failed");
+                        layer.alert(data.msg, {icon: 6}, function () {
+                            // 获得frame索引
+                            var index = parent.layer.getFrameIndex(window.name);
+                        });
+                    }
+                 }
+             });
+             return false;
+        });
+      });
+    </script>
+
+  </body>
+
+</html>
