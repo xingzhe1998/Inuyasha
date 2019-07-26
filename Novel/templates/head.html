@@ -1,0 +1,158 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>青梅煮酒</title>
+</head>
+<div id="topOne">
+	 </div>
+	<div id="Top">
+		<div class="logo"><a href="#"><img src="/static/media/images/ssh.jpeg" width="200px" height="50px"/></a></div>
+		<div class="search">
+        <form>
+				<div id="searchTxt" class="searchTxt" >
+
+
+		<div class="searchMenu">
+			<div style="display:none;" class="searchTab" id="searchTab"></div>
+		</div>
+		<input name="w" type="text" />
+		<div class="searchBtn">
+		<button id="searchBtn" type="submit" style="margin-left: 390px;margin-top:-28px">搜索</button>
+	    </div>
+	    </div>
+
+
+        </form>
+		</div>
+		<div class="user">
+            {% if user.is_authenticated %}
+            <font><a href="{% url 'ucenter:profile' %}">个人中心&nbsp;&nbsp;&nbsp;|</a></font>
+			<font><a href="{% url 'shelf:shelf' %}">书架</a></font>
+            {% else %}
+			<font><a href="{% url 'accounts:login' %}">登录&nbsp;&nbsp;&nbsp;|</a></font>
+			<font><a href="{% url 'accounts:register' %}">注册</a></font>
+            {% endif %}
+		</div>
+	</div>
+<div id="Logo" >
+	<ul>
+		<li class="first"><a href="/index/" title="首页">首页</a></li>
+		<li><a href="/list/classify:玄幻奇幻:0">玄幻奇幻</a></li>
+		<li><a href="/list/classify:都市言情:0">都市言情</a></li>
+		<li><a href="/list/classify:科幻灵异:0">科幻灵异</a></li>
+		<li><a href="/list/classify:耽美同人:0">耽美同人</a></li>
+		<li><a href="/list/classify:女频言情:0">女频言情</a></li>
+		<li><a href="/list/classify:历史军事:0">历史军事</a></li>
+        <li><a href="/list/classify:武侠仙侠:0">武侠仙侠</a></li>
+        <li><a href="/list/classify:网游竞技:0">网游竞技</a></li>
+		<li class="last"></li>
+	</ul>
+</div>
+ <script type="text/javascript" src="/static/media/js/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="/static/media/js/index.js"></script>
+<script src="/static/media/js/jquery.min.js"></script>
+{#<script src="../static/media/js/comm.js"></script>#}
+
+	<script type="text/javascript">
+        	$(".faceul_zero img").hover(function(){
+			$(this).addClass("hoverstyle_zero");
+		},function(){
+			$(this).removeClass("hoverstyle_zero");
+		});
+		$(".infoBox img").hover(function(){
+			$(this).addClass("hoverstyle_one");
+		},function(){
+			$(this).removeClass("hoverstyle_one");
+		});
+		$("img.prev").click(function(){
+
+			$(".imgList ul").animate({"left":-280},500,function(){
+				$(this).append($(this).find("li:first"));
+				$(this).css("left",0);
+			});
+
+		});
+
+		$("img.next").click(function(){
+
+			autoPlay();
+
+		});
+
+		var cleartime=setInterval(autoPlay,2000);
+		//鼠标放上去，停止播入
+		$("img.next,img.prev").hover(function(){
+			clearInterval(cleartime);
+		},function(){
+			cleartime=setInterval(autoPlay,3000);
+		});
+
+		function autoPlay(){
+
+			$(".imgList ul").prepend($(".imgList ul li:last"));
+			$(".imgList ul").css("left",-280);
+			$(".imgList ul").animate({"left":0},500);
+		}
+		//鼠标导航滑块跟随效果
+
+	$(".PartM ul li:nth-of-type(n)").hover(function(){
+        $(".PartM ul li:nth-of-type(n)").css({"background":"#efefef","color":"#666"});
+        $(this).css({"width":"100%","background":"#00A1D2","border":"none"});
+    });
+
+    //图片选项卡
+    //图片选项卡
+    $(function(){
+	$(".PartR>div").hide();
+	$(".PartR>div:eq(0)").show();
+
+	$(".PartM a").click(function(){
+		var n = $(".PartM a").index(this);
+		$(".PartM a").index(this);
+		$(".PartR>div").hide();
+		$(".PartR>div:eq("+n+")").show();
+
+	})
+
+
+})
+
+
+    //下拉
+    $(function(){
+
+	$("#searchSelected").click(function(){
+		$("#searchTab").show();
+		$(this).addClass("searchOpen");
+	});
+
+	$("#searchTab li").hover(function(){
+		$(this).addClass("selected");
+	},function(){
+		$(this).removeClass("selected");
+	});
+
+	$("#searchTab li").click(function(){
+		$("#searchSelected").html($(this).html());
+		$("#searchTab").hide();
+		$("#searchSelected").removeClass("searchOpen");
+	});
+
+});
+
+    //图片缩放
+    $(".book ul img").mouseenter(function(){
+        $(this).animate({width:"110%"},"slow");
+    });
+    $(".book ul img").mouseleave(function(){
+        $(this).animate({width:"80%"},"slow");
+    });
+
+
+
+
+	</script>
+
+
+
+</div></div></body></html>

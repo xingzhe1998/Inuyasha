@@ -1,0 +1,436 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>青梅煮酒</title>
+<link type="text/css" rel="stylesheet" href="/static/media/css/basic.css" >
+
+</head>
+<body>
+<p class="findtext" style="display: none">{{ unfind }}</p>
+	 <div id="topOne">
+	 </div>
+	<div id="Top">
+		<div class="logo"><a href="#"><img src="/static/media/images/ssh.jpeg" width="200px" height="50px"/></a></div>
+		<div class="search">
+        <form   method="POST">
+            {% csrf_token %}
+				<div id="searchTxt" class="searchTxt" >
+		<div class="searchMenu">
+			<div style="display:none;" class="searchTab" id="searchTab"></div>
+		</div>
+		<input name="w" type="text" />
+		<div class="searchBtn">
+		<button id="searchBtn" type="submit" style="margin-left: 390px;margin-top:-28px">搜索</button>
+	    </div>
+	    </div>
+
+
+        </form>
+		</div>
+        <div class="user">
+        {% if user.is_authenticated %}
+        <font><a href="{% url 'ucenter:profile' %}">个人中心&nbsp;&nbsp;&nbsp;|</a></font>
+        <font><a href="{% url 'shelf:shelf' %}">书架</a></font>
+        {% else %}
+        <font><a href="{% url 'accounts:login' %}">登录&nbsp;&nbsp;&nbsp;|</a></font>
+        <font><a href="{% url 'accounts:register' %}">注册</a></font>
+        {% endif %}
+        </div>
+	</div>
+<div id="Logo" >
+	<ul>
+		<li class="first"><a href="/index/" title="首页">首页</a></li>
+		<li><a href="/list/classify:玄幻奇幻:0">玄幻奇幻</a></li>
+		<li><a href="/list/classify:都市言情:0">都市言情</a></li>
+		<li><a href="/list/classify:科幻灵异:0">科幻灵异</a></li>
+		<li><a href="/list/classify:耽美同人:0">耽美同人</a></li>
+		<li><a href="/list/classify:女频言情:0">女频言情</a></li>
+		<li><a href="/list/classify:历史军事:0">历史军事</a></li>
+        <li><a href="/list/classify:武侠仙侠:0">武侠仙侠</a></li>
+        <li><a href="/list/classify:网游竞技:0">网游竞技</a></li>
+		<li class="last"></li>
+	</ul>
+</div>
+<!--主体-->
+
+<div id="Foucs">
+	<div class="FoucsCommon">
+		<div class="Menu">
+			<ul>
+				<li>
+					<h3 style="color:#ffbc42">都市言情</h3>
+                    <p style="margin-top: -10px">
+                    {% for novel in left.ds %}
+					<a href="/list/novel{{ novel.id }}/section/">{{ novel.novel_name }}</a>
+                    {% endfor %}
+                    </p>
+					<div class="moreNav">
+
+
+					</div>
+					<div class="border_top"></div>
+					<div class="border_bottom"></div>
+					<div class="border_right"></div>
+				</li>
+				<li>
+					<h3 style="color:#ffbc42">玄幻奇幻</h3>
+					<p style="margin-top: -10px">
+                    {% for novel in left.xh %}
+					<a href="/list/novel{{ novel.id }}/section/">{{ novel.novel_name }}</a>
+                    {% endfor %}
+                    </p>
+					<div class="moreNav"></div>
+					<div class="border_top"></div>
+					<div class="border_bottom"></div>
+					<div class="border_right"></div>
+
+				</li>
+				<li>
+					<h3 style="color:#ffbc42">历史军事</h3>
+					<p style="margin-top: -10px">
+                    {% for novel in left.ls %}
+					<a href="/list/novel{{ novel.id }}/section/">{{ novel.novel_name }}</a>
+                    {% endfor %}
+                    </p>
+					<div class="moreNav"></div>
+					<div class="border_top"></div>
+					<div class="border_bottom"></div>
+					<div class="border_right"></div>
+				</li>
+				<li>
+					<h3 style="color:#ffbc42">科幻灵异</h3>
+					<p style="margin-top: -10px">
+                    {% for novel in left.kh %}
+					<a href="/list/novel{{ novel.id }}/section/">{{ novel.novel_name }}</a>
+                    {% endfor %}
+                    </p>
+					<div class="moreNav">
+					</div>
+					<div class="border_top"></div>
+					<div class="border_bottom"></div>
+					<div class="border_right"></div>
+				</li>
+				<li>
+					<h3 style="color:#ffbc42">女频言情</h3>
+					<p style="margin-top: -10px">
+                    {% for novel in left.np %}
+					<a href="/list/novel{{ novel.id }}/section/">{{ novel.novel_name }}</a>
+                    {% endfor %}
+                    </p>
+					<div class="moreNav"></div>
+					<div class="border_top"></div>
+					<div class="border_bottom"></div>
+					<div class="border_right"></div>
+				</li>
+				<li>
+					<h3 style="color:#ffbc42">武侠仙侠</h3>
+					<p style="margin-top: -10px">
+                    {% for novel in left.wx %}
+					<a href="/list/novel{{ novel.id }}/section/">{{ novel.novel_name }}</a>
+                    {% endfor %}
+                    </p>
+					<div class="moreNav"></div>
+					<div class="border_top"></div>
+					<div class="border_bottom"></div>
+					<div class="border_right"></div>
+				</li>
+			</ul>
+		</div>
+
+		<div class="flash">
+			<!--左右切换按扭-->
+			<a href="javascript:void(0)" class="prev" style="display: none;"></a>
+			<a href="javascript:void(0)" class="next" style="display: none;"></a>
+
+			<!--图片滚动部分-->
+			<div class="scroll">
+                {% for generalize in all_generalize %}
+                    <a class="new" href="/list/novel{{ generalize.generalize_novel.id }}/section"><img src="{{ generalize.generalize_picture }}"></a>
+                {% endfor %}
+                    <a class="new" href="https://kg.qq.com/node/play?s=PcrU1oPiLbVZiPjT&shareuid=609e94812429358b37&topsource=a0_pn201001006_z11_u239414203_l0_t1563893659"><img src="/static/media/images/ydyrx.jpg"></a>
+			</div>
+
+			<!--滚动按扭部分-->
+			<div class="But">
+				<span class=""></span>
+				<span class=""></span>
+				<span class=""></span>
+				<span class=""></span>
+				<span class=""></span>
+				<span class="hover"></span>
+			</div>
+		</div>
+		<!--轮播图结束-->
+
+
+		<div class="news">
+			<div class="newsback"></div>
+			<div class="newsCommon">
+				<!--746小说吧快讯 开始-->
+
+					<h3>小说快讯</h3>
+					<ul>
+						<li><a href="/index/article{{ flash1.id }}" class="first" title={{ flash1.title }}><font>{{ flash1.tag }}</font>{{ flash1.title }}</a></li>
+						<li><a href="/index/article{{ flash2.id }}" title=title={{ flash2.title }}><font>{{ flash2.tag }} </font>{{ flash2.title }}</a></li>
+						<li><a href="/index/article{{ flash3.id }}" title=title={{ flash3.title }}><font>{{ flash3.tag }}</font> {{ flash3.title }}</a></li>
+					</ul>
+				<!--746小说吧 结束-->
+				<div class="Datatx">
+					<h3>最新加入</h3>
+					<ul>
+						<li><a href="/list/novel{{ new_novel.one.id }}/section/" ><font>[ 玄幻 ]</font>{{ new_novel.one.novel_name}} </a></li>
+						<li><a href="/list/novel{{ new_novel.two.id }}/section/" ><font>[ 玄幻 ]</font>{{ new_novel.two.novel_name }}</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	<div style="clear:both"></div></div>
+</div>
+<!--主体结束-->
+<div class="fenlei">
+	<p class="ti">收藏推荐</p>
+	<div class="Part">
+
+		<div class="PartL">
+
+			<!--左右切换按扭-->
+			<img src="/static/media/images/prev.png" class="prev">
+			<img src="/static/media/images/next.png" class="next">
+
+
+			<div class="imgList">
+				<ul style="left: 0px;">
+                    {% for key,top in tops.items %}
+                    <li>
+						<img src="{{ top.picture }}" width="280" height="280">
+                        <h3><font color="#ff7f50">今日{{ key }}最热：</font>{{ top.novel_name }}</h3>
+						<span>点击：<a href="/list/novel{{top.id}}/section/"><font>立即阅读</font></a></span>
+					</li>
+                    {% endfor %}
+
+
+				</ul>
+			</div>
+		</div>
+
+		<div class="PartM">
+	<ul>
+				<li style="background: rgb(239, 239, 239); color: rgb(102, 102, 102);"><a>男生</a></li>
+				<li style="background: rgb(239, 239, 239); color: rgb(102, 102, 102); width: 100%; border: none;"><a>女生</a></li>
+				<li style="background: rgb(0, 161, 210); color: rgb(102, 102, 102); width: 100%; border: none;"><a>点击最多</a></li>
+				<li style="background: rgb(239, 239, 239); color: rgb(102, 102, 102); width: 100%; border: none;"><a>下载最多</a></li>
+				<li style="background: rgb(239, 239, 239); color: rgb(102, 102, 102);"><a>收藏最多</a></li>
+				<li class="one" style="background: rgb(239, 239, 239); color: rgb(102, 102, 102);"></li>
+			</ul>
+
+
+			<div class="faceul_zero">
+			<img src="/static/media/images/2918920-1543581449000.jpg" class="">
+			<p>左手杀天下不仁之人右手治为善之人 </p>
+			<span class="hot">热销书籍</span>
+		</div>
+		</div>
+		<div class="PartR">
+		<div class="infoBox" style="display: none;">
+			<section class="book">
+
+		    <ul>
+                {% for  novel in man_novel %}
+                     <li><img src={{ novel.picture }} width="150px" height="175px" class="" style="display: inline-block; width: 80%;">
+              <p>{{ novel.novel_name }}： <a href="/list/novel{{ novel.id }}/section/">点击阅读</a></p></li>
+                {% endfor %}
+        </ul>
+ </section>
+		</div>
+
+
+
+<div class="secondInfo" style="display: none;">
+	<section class="book">
+
+		    <ul>
+		    	 {% for  novel in woman_novel %}
+                     <li><img src={{ novel.picture }} width="150px" height="175px" class="" style="display: inline-block; width: 80%;">
+              <p>{{ novel.novel_name }}： <a href="/list/novel{{ novel.id }}/section/">点击阅读</a></p></li>
+                {% endfor %}
+
+        </ul>
+ </section>
+
+		</div>
+
+			<div class="thirdInfo" style="display: block;">
+			<section class="book">
+
+		    <ul>
+		     {% for  novel in click_order %}
+                     <li><img src={{ novel.picture }} width="150px" height="175px" class="" style="display: inline-block; width: 80%;">
+              <p>{{ novel.novel_name }}： <a href="/list/novel{{ novel.id }}/section/">点击阅读</a></p></li>
+                {% endfor %}
+        </ul>
+ </section>
+		</div>
+
+
+			 <div class="fourInfo" style="display: none;">
+		<section class="book">
+
+		    <ul>
+		     {% for  novel in down_order %}
+                     <li><img src={{ novel.picture }} width="150px" height="175px" class="" style="display: inline-block; width: 80%;">
+              <p>{{ novel.novel_name }}： <a href="/list/novel{{ novel.id }}/section/">点击阅读</a></p></li>
+                {% endfor %}
+
+        </ul>
+ </section>
+	  </div>
+
+
+	  <div class="lastInfo" style="display: none;">
+			<section class="book">
+
+		    <ul>
+		     {% for  novel in collect %}
+                     <li><img src={{ novel.picture }} width="150px" height="175px" class="" style="display: inline-block; width: 80%;">
+              <p>{{ novel.novel_name }}： <a href="/list/novel{{ novel.id }}/section/">点击阅读</a></p></li>
+                {% endfor %}
+
+        </ul>
+ </section>
+	</div>
+
+
+	</div>
+<div style="clear:both"></div></div>
+
+<!--"/inc/fragment/6/3516.html" -->
+<div class="Footer">
+	<div class="footer_nav">
+		<a href="https://www.baidu.com">友情链接</a>　|　
+		<a href="https://www.baidu.com">帮助中心</a>　|　
+		<a href="https://www.baidu.com">用户守则</a>　|　
+		<a href="https://www.baidu.com">网站地图</a>　|　
+		<a href="https://www.baidu.com">诚聘精英</a>　|　
+	</div>
+	<p><a>Copyright (C) 2019 www.xxyxz.com All Rights Reserved </a>
+		<br>
+        本站仅供个人学习使用，如果有资源冲突，请联系站长<strong>徐小七/TEL:13787084379</strong>
+	青梅煮酒小说网所收录免费小说作品、用户上传信息、图片等其他一切内容均属用户个人行为，与青梅煮酒小说网无关。--青梅煮酒小说网权利声明。
+	</p>
+
+
+<!--引用外部jquery文件-->
+<script type="text/javascript" src="/static/media/js/jquery-1.8.3.min.js"></script>
+<script type="text/javascript" src="/static/media/js/index.js"></script>
+<script src="/static/media/js/jquery.min.js"></script>
+{#<script src="../static/media/js/comm.js"></script>#}
+     <script type="text/javascript">
+        var As = document.getElementsByClassName('findtext');
+        if (As[0].innerHTML != "")
+        {
+            alert(As[0].innerHTML);
+        }
+    </script>
+	<script type="text/javascript">
+        	$(".faceul_zero img").hover(function(){
+			$(this).addClass("hoverstyle_zero");
+		},function(){
+			$(this).removeClass("hoverstyle_zero");
+		});
+		$(".infoBox img").hover(function(){
+			$(this).addClass("hoverstyle_one");
+		},function(){
+			$(this).removeClass("hoverstyle_one");
+		});
+		$("img.prev").click(function(){
+
+			$(".imgList ul").animate({"left":-280},500,function(){
+				$(this).append($(this).find("li:first"));
+				$(this).css("left",0);
+			});
+
+		});
+
+		$("img.next").click(function(){
+
+			autoPlay();
+
+		});
+
+		var cleartime=setInterval(autoPlay,2000);
+		//鼠标放上去，停止播入
+		$(" a img.next, a img.prev").hover(function(){
+			clearInterval(cleartime);
+		},function(){
+			cleartime=setInterval(autoPlay,3000);
+		});
+
+		function autoPlay(){
+
+			$(".imgList ul").prepend($(".imgList ul li:last"));
+			$(".imgList ul").css("left",-280);
+			$(".imgList ul").animate({"left":0},500);
+		}
+		//鼠标导航滑块跟随效果
+
+	$(".PartM ul li:nth-of-type(n)").hover(function(){
+        $(".PartM ul li:nth-of-type(n)").css({"background":"#efefef","color":"#666"});
+        $(this).css({"width":"100%","background":"#00A1D2","border":"none"});
+    });
+
+    //图片选项卡
+    //图片选项卡
+    $(function(){
+	$(".PartR>div").hide();
+	$(".PartR>div:eq(0)").show();
+
+	$(".PartM a").click(function(){
+		var n = $(".PartM a").index(this);
+		$(".PartM a").index(this);
+		$(".PartR>div").hide();
+		$(".PartR>div:eq("+n+")").show();
+
+	})
+
+
+})
+
+
+    //下拉
+    $(function(){
+
+	$("#searchSelected").click(function(){
+		$("#searchTab").show();
+		$(this).addClass("searchOpen");
+	});
+
+	$("#searchTab li").hover(function(){
+		$(this).addClass("selected");
+	},function(){
+		$(this).removeClass("selected");
+	});
+
+	$("#searchTab li").click(function(){
+		$("#searchSelected").html($(this).html());
+		$("#searchTab").hide();
+		$("#searchSelected").removeClass("searchOpen");
+	});
+
+});
+
+    //图片缩放
+    $(".book ul img").mouseenter(function(){
+        $(this).animate({width:"110%"},"slow");
+    });
+    $(".book ul img").mouseleave(function(){
+        $(this).animate({width:"80%"},"slow");
+    });
+
+
+
+
+	</script>
+
+
+
+</div></div></body></html>

@@ -1,0 +1,14 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>青梅煮酒</title>
+  <link type="text/css" rel="stylesheet" href="/static/flash/flash.css" >
+</head>
+<h2 style="text-align: center;">{{ flash.title }}</h2>
+<br><br>
+<h3>作者：{{ flash.author }}</h3>
+<div id="content">
+    {% for line in flash_text %}
+　　{{ line }}<br>　　
+    {% endfor %}
+</div>

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="/static/read/novel.css" rel="stylesheet">
+    <link href="/static/list/css/base.css" rel="stylesheet">
+</head>
+<body>
+<form name="input" action="/list/novel{{ novel_id }}/section/" method="get">
+  <input type="submit" value="目录" style="margin-left:700px;">
+</form>
+<div class="p">
+    {% for line in data %}
+        <p>{{line}}</p>
+    {% endfor %}
+        <p></p>
+</div>
+    <div class="pagelist"><a title="Total record">&nbsp;<b>{{ pg_len }}</b> </a>&nbsp;&nbsp;&nbsp;<b>{{ pg_num }}</b>&nbsp;<a href={{ last }}>上一页</a>&nbsp;<a href={{ next }}>下一页</a>&nbsp;</div>
+    <div id="banner_content"><a target="_blank" href="http://zhuanti.17k.com/subject/2018/baogeng/web/pc/index.html?baogeng=1907"><img src="https://img.17k.com/cmsimg/default/2019/07/1563081660.21414131.jpg"></a></div>
+
+</body>
+</html>

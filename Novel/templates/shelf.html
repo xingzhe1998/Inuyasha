@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block load_css %}
+{#    <link rel="stylesheet" type="text/css" href="http://cdn.bootcss.com/font-awesome/4.6.0/css/font-awesome.min.css">#}
+    <link rel="stylesheet" href="/static/avator/css/amazeui.min.css">
+    <link rel="stylesheet" href="/static/avator/css/amazeui.cropper.css">
+    <link rel="stylesheet" href="/static/avator/css/custom_up_img.css">
+    <style type="text/css">
+        .up-img-cover {width: 100px;height: 100px;}
+        .up-img-cover img{width: 100%;}
+    </style>
+{% endblock %}
+
+{% block load_js %}
+    <script src="/static/avator/js/amazeui.min.js" charset="utf-8"></script>
+    <script src="/static/avator/js/cropper.min.js" charset="utf-8"></script>
+    <script src="/static/js/custom.js" charset="utf-8"></script>
+    <script src="/static/avator/js/custom_up_img.js" charset="utf-8"></script>
+{% endblock %}
+
+{% block content %}
+    <div class="container-fluid">
+        <div class="panel">
+            <div class="panel-body">
+                <h4>藏书阁</h4>
+                <hr/>
+                <div class="row">
+                {% for novel in novels %}
+                    <div class="col-md-3">
+                        <ul><li>
+                        <h3 class="blogtitle"><a target="_blank">{{ novel.novel_name }}</a></h3>
+                        <span class="blogpic imgscale"><a href="/list/novel{{ novel.id }}/section/section:{{ novel.current_chapter }}/" title=""><img src="{{ novel.picture }}"  width="174px"  height="180px" alt=""></a></span>
+                        <p class="blogtext">{{ novel.brief_introduction }} </p>
+{#                        <p class="bloginfo"><span>作者</span>{{ novel.author_name }}<span>【<a href="/list/classify:{{ novel.kind }}0">{{ novel.kind }}</a>】</span></p>#}
+                        <p><a href="/list/novel{{ novel.id }}/section/section:{{ novel.current_chapter }}/" style="background-color:#f5c6cb;margin-left:0;float:left;border-radius: 5px;" >继续阅读</a ></p>
+                        <form name="input" action="" method="GET">
+                            <input type="submit" value="取消收藏" style="background-color:#ffad6d;border-radius: 5px;margin-top:0;margin-left:50px;">
+                            {# 让id不显示 #}
+                            <label><input type="tel"  name="collect_id" value="{{ novel.id }}" style="margin-left:200px;display: none"></label>
+                        </form>
+                        </li>
+                        <li><p style="background-color:#fafafa;margin-left:0;float:left;" >阅读进度{{ novel.read_progress }}%</p ></li>
+                        </ul>
+                    </div>
+                {% endfor %}
+{#                    <div class="col-lg-offset-3 col-lg-9">#}
+{#                        <button type="submit" class="btn btn-danger">提交</button>#}
+{#                    </div>#}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

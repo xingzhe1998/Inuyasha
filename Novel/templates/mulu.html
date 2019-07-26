@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="/static/se/line.css" rel="stylesheet">
+</head>
+<body>
+<div class="volume-wrap">
+
+                <div class="volume">
+                    <div class="cover"></div>
+
+                    <h3>
+
+                        {{ name }}正文卷<i>·</i><span class="free"> 共{{ se_num }}章</span></h3>
+                    <ul class="cf">
+                        {% for sec_num,sec_name  in li%}
+                            <li ><a href="/list/novel{{ novel_id }}/section/section:{{sec_num}}/">{{sec_name}}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+</body>
+</html>

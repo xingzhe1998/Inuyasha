@@ -1,0 +1,85 @@
+#content {
+    padding-bottom: 0px;
+    line-height: 30px;
+    min-height: 800px;
+    height: auto !important;
+    height: 700px;
+    overflow: visible;
+    width: 95%;
+    font-size: 16px;
+    padding-right: 7px;
+    margin: auto;
+    padding-top: 1px;
+    background-image: url(http://s.faloo.com/novel/page_bg.gif);
+    clear: both;
+}
+div {
+    font-size: 12px;
+}
+user agent stylesheet
+div {
+    display: block;
+}
+Style Attribute {
+    background: rgb(227, 249, 227);
+    color: rgb(0, 0, 0);
+}
+body {
+    font-size: 12px;
+    margin: 0px;
+    color: #000000;
+    font-family: simsun;
+    line-height: 20px;
+    padding: 0px;
+    background-color: #e3f9e3;
+}
+user agent stylesheet
+
+::-webkit-scrollbar {
+    width: 15px;
+}
+::-webkit-scrollbar {
+    width: 15px;
+}
+::-webkit-scrollbar-button {
+    background-color: transparent;
+}
+::-webkit-scrollbar-button {
+    background-color: transparent;
+}
+::-webkit-scrollbar-corner {
+    background-color: transparent;
+}
+::-webkit-scrollbar-corner {
+    background-color: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 3px;
+}
+::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 3px;
+}
+::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+::-webkit-scrollbar-track {
+    background-color: transparent;
+}
+
+.nav {
+    height: 18px;
+    clear: both;
+    width: 990px;
+    margin-left: 10px;
+    padding-top: 5px;
+    font-weight: bold;
+    color: #666666;
+}
+
+
+
+
+
+

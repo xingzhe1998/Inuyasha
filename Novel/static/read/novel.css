@@ -1,0 +1,35 @@
+.readArea .p {
+    padding: 0 42px 20px;
+    line-height: 155%;
+    word-wrap: break-word;
+    font-family: Simsun,serif;
+}
+div {
+    display: block;
+}
+.readArea {
+    overflow: auto;
+    clear: both;
+    width: 980px;
+    font-size: 16px;
+    padding-right: 20px;
+    font-family: Simsun,"MicroSoft YaHei",serif;
+}
+
+body {
+    font: 12px/1.5 'MicroSoft YaHei';
+    color: #333;
+    background: #f6f6f6;
+}
+.readArea .p p {
+    text-indent: 2em;
+}
+p {
+    display: block;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+}
+
+

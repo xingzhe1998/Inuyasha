@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block content %}
+<div class="row">
+  <aside class="profile-info col-lg-3">
+    {% include 'uc_left.html' %}
+  </aside>
+  <aside class="profile-info col-lg-9">
+      <section>
+          <div class="row">
+            {% block uc_content %}
+                contents in here
+            {% endblock %}
+          </div>
+      </section>
+  </aside>
+</div>
+{% endblock %}
+{% block load_js %}
+  <script src="{% static 'assets/jquery-knob/js/jquery.knob.js' %}"></script>
+  <script>
+      //knob
+      $(".knob").knob();
+  </script>
+{% endblock %}
