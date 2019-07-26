@@ -29,7 +29,7 @@ class TextPipeline(object):
         try:
             print('正在下载小说{}...'.format(item['book_title']))
             request = urllib.request.Request(url=item['download_url'], headers=self.headers)
-            item['file_path'] = self.base_path + '\{}.txt'.format(item['book_title'])
+            item['file_path'] = self.base_path + '/{}.txt'.format(item['book_title'])
             with urllib.request.urlopen(request) as file:
                 if file.headers['Content-Length'] == '391':
                     raise DropItem('错误网页...damn')
