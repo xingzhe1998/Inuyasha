@@ -85,9 +85,9 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',   # 数据库引擎
         'NAME': 'novel',         # 你要存储数据的库名，事先要创建之
-        'USER': 'xyz',         # 数据库用户名
-        'PASSWORD': '1998Yizhe#',     # 密码
-        'HOST': '47.102.197.230',    # 主机
+        'USER': '',         # 数据库用户名
+        'PASSWORD': '',     # 密码
+        'HOST': '',    # 主机
         'PORT': '3306',         # 数据库使用的端口
     }
 }
