@@ -59,7 +59,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'shop_system.urls'
+ROOT_URLCONF = 're_shop_system.urls'
 
 # context_processors 上下文处理器
 TEMPLATES = [
@@ -79,7 +79,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'shop_system.wsgi.application'
+WSGI_APPLICATION = 're_shop_system.wsgi.application'
 
 
 # Database
